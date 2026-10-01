@@ -17,7 +17,10 @@ import tui "github.com/grindlemire/go-tui"
 
 inp := tui.NewInput(
     tui.WithInputWidth(30),
+    // Uniform border for all sides
     tui.WithInputBorder(tui.BorderRounded),
+    // Individual borders for each side
+    // tui.WithInputBorderTRBL(tui.BorderNone, tui.BorderNone, tui.BorderThick, tui.BorderNone)
     tui.WithInputPlaceholder("Type here..."),
     tui.WithInputOnSubmit(func(text string) {
         // handle submitted text
@@ -36,10 +39,10 @@ Creates a new `Input` with the given options. Default values:
 | Setting     | Default      | Description                              |
 |-------------|--------------|------------------------------------------|
 | Width       | 20           | Characters visible before scrolling, unless the layout assigns another width |
-| Border      | `BorderNone` | No border                                |
+| Border      | `BorderAll(BorderNone)` | No border                     |
 | TextStyle   | `Style{}`    | Default terminal style                   |
 | Placeholder | `""`         | No placeholder text                      |
-| PlaceholderStyle | `Style{}.Dim()` | Dim text for placeholder          |
+| PlaceholderStyle | `Style{}.Dim()` | Dim text for placeholder         |
 | Cursor      | real cursor  | Framework places the terminal cursor; `WithInputVirtualCursor` draws `'▌'` instead |
 | FocusColor  | `Cyan`       | Border color when focused                |
 
@@ -74,6 +77,7 @@ All `<input>` attributes and their types:
 | `placeholderStyle` | `tui.Style` | Placeholder styling (default: dim) |
 | `width` | `int` | Width in characters (default 20) |
 | `border` | `tui.BorderStyle` | Border style |
+| `borders` | `expression` | BorderStyle by side ({Top, Right, Bottom, Left}) |
 | `textStyle` | `tui.Style` | Text styling |
 | `cursor` | `rune` | Cursor character (default '▌') |
 | `focusColor` | `tui.Color` | Border color when focused (default Cyan) |
@@ -103,7 +107,7 @@ In `.gsx`:
 ```gsx
 <input
     value={s.query}
-    border={tui.BorderRounded}
+    borders={tui.BorderNone, tui.BorderNone, tui.BorderThick, tui.BorderNone}
     focusColor={tui.Magenta}
     borderGradient={tui.NewGradient(tui.Blue, tui.Cyan)}
     focusGradient={tui.NewGradient(tui.Cyan, tui.Magenta)}
@@ -158,6 +162,7 @@ inp.InsertText("> ") // prefix the line, cursor ends after the prefix
 |----------|-------------|
 | `WithInputWidth(int)` | Width in characters (default 20). The viewport follows the width the layout assigns once the root has been laid out |
 | `WithInputBorder(BorderStyle)` | Border style |
+| `WithInputBorderTRBL(BorderStyle, BorderStyle, BorderStyle, BorderStyle)` | `tui.Borders` | Border styles by side (Top, Right, Bottom, Left) |
 | `WithInputTextStyle(Style)` | Text style |
 | `WithInputPlaceholder(string)` | Placeholder text |
 | `WithInputPlaceholderStyle(Style)` | Placeholder style (default: dim) |
@@ -183,7 +188,10 @@ import tui "github.com/grindlemire/go-tui"
 
 ta := tui.NewTextArea(
     tui.WithTextAreaWidth(60),
+    // Uniform border for all sides
     tui.WithTextAreaBorder(tui.BorderRounded),
+    // Individual borders for each side
+    // tui.WithTextAreaBorderTRBL(tui.BorderNone, tui.BorderNone, tui.BorderThick, tui.BorderNone)
     tui.WithTextAreaPlaceholder("Type something..."),
     tui.WithTextAreaOnSubmit(func(text string) {
         // handle submitted text
@@ -203,10 +211,10 @@ Creates a new `TextArea` with the given options. Default values:
 |-------------|--------------|------------------------------------------|
 | Width       | 40           | Characters per line before wrapping, unless the layout assigns another width |
 | MaxHeight   | 0 (no limit) | Maximum rows of text visible             |
-| Border      | `BorderNone` | No border                                |
+| Border      | `BorderAll(BorderNone)` | No border                     |
 | TextStyle   | `Style{}`    | Default terminal style                   |
 | Placeholder | `""`         | No placeholder text                      |
-| PlaceholderStyle | `Style{}.Dim()` | Dim text for placeholder          |
+| PlaceholderStyle | `Style{}.Dim()` | Dim text for placeholder         |
 | Cursor      | real cursor  | Framework places the terminal cursor; `WithTextAreaVirtualCursor` draws `'▌'` instead |
 | FocusColor  | `Cyan`       | Border color when focused                |
 | SubmitKey   | `KeyEnter`   | Enter submits, Ctrl+J inserts newline    |
@@ -223,6 +231,7 @@ All `<textarea>` attributes and their types:
 | `width` | `int` | Width in characters (default 40) |
 | `maxHeight` | `int` | Maximum visible rows (0 = unlimited) |
 | `border` | `tui.BorderStyle` | Border style |
+| `borders` | `expression` | BorderStyle by side ({Top, Right, Bottom, Left}) |
 | `textStyle` | `tui.Style` | Text styling |
 | `cursor` | `rune` | Cursor character (default '▌') |
 | `focusColor` | `tui.Color` | Border color when focused (default Cyan) |
@@ -405,6 +414,18 @@ Sets the border style around the text area. Default: `BorderNone`.
 
 ```go
 ta := tui.NewTextArea(tui.WithTextAreaBorder(tui.BorderRounded))
+```
+
+#### WithTextAreaBorderTRBL
+
+```go
+func WithTextAreaBorderTRBL(top, right, bottom, left BorderStyle) TextAreaOption
+```
+
+Sets the border style for each side around the text area. Default for each side: `BorderNone`.
+
+```go
+ta := tui.NewTextArea(tui.WithTextAreaBorderTRBL(tui.BorderNone, tui.BorderNone, tui.BorderRounded, tui.BorderRounded))
 ```
 
 #### WithTextAreaTextStyle
@@ -886,6 +907,6 @@ Markdown holds no scroll position, so the surrounding container provides the ref
 - [Component Interfaces Reference](interfaces.md) — `Component`, `KeyListener`, `WatcherProvider`, `Focusable`, `AppBinder`
 - [Events Reference](events.md) — `KeyEvent`, `Key` constants, `KeyMap`
 - [State Reference](state.md) — `State[T]` used internally by TextArea
-- [Styling Reference](styling.md) — `Style` and `BorderStyle` for visual configuration
+- [Styling Reference](styling.md) — `Style` and `BorderStyle` / `Borders` for visual configuration
 - [Focus Guide](../guides/13-focus.md) — Focus management and Tab navigation
 - [Inline Mode Guide](../guides/12-inline-mode.md) — Using TextArea in inline mode

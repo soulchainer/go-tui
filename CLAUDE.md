@@ -112,10 +112,10 @@ Use this section to quickly find the right files for a given change.
 ### Changing the public API (Element options, App config, types)
 
 - `element.go` — Element struct definition, TextAlign/ScrollMode/OverflowMode enums
-- `element_options.go` — Option funcs: WithWidth, WithHeight, WithFlexGrow, WithDirection, WithBorder, WithScrollable, WithTruncate, WithHidden, WithOverflow, WithTextGradient, WithBackgroundGradient, WithBorderGradient, WithBorderTitleAlign, WithBorderTitleStyle, WithFocusBorderStyle, WithCursorSource, etc.
+- `element_options.go` — Option funcs: WithWidth, WithHeight, WithFlexGrow, WithDirection, WithBorder, WithBorderTRBL, WithScrollable, WithTruncate, WithHidden, WithOverflow, WithTextGradient, WithBackgroundGradient, WithBorderGradient, WithBorderTitleAlign, WithBorderTitleStyle, WithFocusBorderStyle, WithCursorSource, etc.
 - `element_options_auto.go` — WithWidthAuto(), WithHeightAuto()
 - `class.go` — WithClass(classes) and Element.SetClass: runtime Tailwind class application (used by generated code for `class={expr}`)
-- `element_accessors.go` — Getters/setters: SetText, SetBorder, SetStyle, Background, SetWidth, SetHeight, SetBorderTitleAlign, SetBorderTitleStyle, SetFocusBorderStyle, etc.
+- `element_accessors.go` — Getters/setters: SetText, SetBorder, SetBorderTRBL, SetStyle, Background, SetWidth, SetHeight, SetBorderTitleAlign, SetBorderTitleStyle, SetFocusBorderStyle, etc.
 - `element_tree.go` — Tree manipulation: AddChild, RemoveChild, RemoveAllChildren
 - `element_scroll.go` — Scroll methods: ScrollTo, ScrollOffset, MaxScroll, ViewportSize
 - `app_options.go` — AppOption funcs: WithFrameRate, WithMouseEnabled, WithInlineHeight, WithGlobalKeyHandler, WithInputLatency, WithEventQueueSize, WithPreRenderHook, WithPostRenderHook, WithManualCursor, etc.
@@ -530,6 +530,7 @@ func helper(s string) string {
 |-----------|------|-------------|
 | `value` | `string` | Current input value |
 | `placeholder` | `string` | Placeholder text when empty |
+| `borders` | expression | Border styles specified by side, in order (Top, Right, Bottom, Lef). Example: `{tui.BorderNone, tui.BorderThick, tui.BorderDouble, tui.BorderThick}` |
 
 ### Progress-specific Attributes
 
@@ -546,6 +547,7 @@ func helper(s string) string {
 | `width` | `int` | Width in characters (default 40) |
 | `maxHeight` | `int` | Maximum height in rows (0 = unlimited) |
 | `border` | `tui.BorderStyle` | Border style |
+| `borders` | expression | Border styles specified by side, in order (Top, Right, Bottom, Lef). Example: `{tui.BorderNone, tui.BorderThick, tui.BorderDouble, tui.BorderThick}` |
 | `textStyle` | `tui.Style` | Text styling |
 | `placeholderStyle` | `tui.Style` | Placeholder styling (default: dim) |
 | `cursor` | `rune` | Cursor character (default '▌') |
@@ -655,10 +657,12 @@ the previous string set are restored to their pre-class values before the new st
 
 | Class | Description |
 |-------|-------------|
-| `border` / `border-single` | Single line border |
-| `border-double` | Double line border |
-| `border-rounded` | Rounded border |
-| `border-thick` | Thick border |
+| `border-none` | No border (all sides) |
+| `border` / `border-single` | Single line border (all sides) |
+| `border-double` | Double line border (all sides) |
+| `border-rounded` | Rounded border (all sides) |
+| `border-thick` | Thick border (all sides) |
+| `border-SIDE-STYLE` | Individual border style (`STYLE` one of: `none`, `single`, `double`, `rounded`, `thick`) for each side (`SIDE` one of: `t` (top), `r` (right), `b` (bottom), `l` (left), `x` (left and right), `y` (top and bottom)) |
 | `border-COLOR` | Border color (red, green, blue, cyan, etc.) |
 | `border-[#hex]` | Border color from hex (e.g., `border-[#ff6600]`) |
 | `border-gradient-C1-C2[-dir]` | Border gradient (directions: h, v, dd, du) |
@@ -725,6 +729,9 @@ Gradient directions: `-h` (horizontal, default), `-v` (vertical), `-dd` (diagona
 tui.Fixed(10)        // 10 characters
 tui.Percent(50)      // 50% of available space
 tui.Auto()           // Size to content
+
+// Represents each Border (tui.BorderStyle) of an element
+tui.Borders // {Top: BorderStyle, Right: BorderStyle, Bottom: BorderStyle, Left: BorderStyle}
 
 // tui.BorderStyle
 tui.BorderNone

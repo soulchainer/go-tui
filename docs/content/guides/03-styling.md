@@ -117,7 +117,8 @@ Borders wrap an element in box-drawing characters. Four styles are available:
 
 | Class | Style | Characters |
 |-------|-------|------------|
-| `border-single` | Single line | `┌─┐│└─┘` |
+|`border-none` | Empty line | ` ` |
+| `border`/`border-single` | Single line | `┌─┐│└─┘` |
 | `border-double` | Double line | `╔═╗║╚═╝` |
 | `border-rounded` | Rounded corners | `╭─╮│╰─╯` |
 | `border-thick` | Heavy line | `┏━┓┃┗━┛` |
@@ -135,6 +136,60 @@ Borders wrap an element in box-drawing characters. Four styles are available:
     </div>
     <div class="border-thick p-1">
         <span>Thick</span>
+    </div>
+</div>
+```
+
+All four border styles can also be set separately for each box side. Several classes targeting each side are available, plus one extra style specific for this case: `none`, to draw an empty line:
+
+| Class | Side | Style | Character |
+|-------|------|-------|-----------|
+| `border-t-none` | Top | Empty line | ` ` |
+| `border-t-single` | Top | Single line | `─` |
+| `border-t-double` | Top | Double line | `═` |
+| `border-t-rounded` | Top | Rounded corners | `─` |
+| `border-t-thick` | Top | Heavy line | `━` |
+| `border-r-none` | Right | Empty line | ` ` |
+| `border-r-single` | Right | Single line | `│` |
+| `border-r-double` | Right | Double line | `║` |
+| `border-r-rounded` | Right | Rounded corners | `│` |
+| `border-r-thick` | Right | Heavy line | `┃` |
+| `border-b-none` | Bottom | Empty line | ` ` |
+| `border-b-single` | Bottom | Single line | `─` |
+| `border-b-double` | Bottom | Double line | `═` |
+| `border-b-rounded` | Bottom | Rounded corners | `─` |
+| `border-b-thick` | Bottom | Heavy line | `━` |
+| `border-l-none` | Left | Empty line | ` ` |
+| `border-l-single` | Left | Single line | `│` |
+| `border-l-double` | Left | Double line | `║` |
+| `border-l-rounded` | Left | Rounded corners | `│` |
+| `border-l-thick` | Left | Heavy line | `┃` |
+| `border-x-none` | Left and Right | Empty line | ` ` |
+| `border-x-single` | Left and Right | Single line | `│` |
+| `border-x-double` | Left and Right | Double line | `║` |
+| `border-x-rounded` | Left and Right | Rounded corners | `│` |
+| `border-x-thick` | Left and Right | Heavy line | `┃` |
+| `border-y-none` | Top and Bottom | Empty line | ` ` |
+| `border-y-single` | Top and Bottom | Single line | `─` |
+| `border-y-double` | Top and Bottom | Double line | `═` |
+| `border-y-rounded` | Top and Bottom | Rounded corners | `─` |
+| `border-y-thick` | Top and Bottom | Heavy line | `━` |
+
+**About corners**: currently, corners are drawn only if adjacent sides have visible, non `none`, styles. Corners match the style of the top/bottom sides.
+
+```gsx
+<div class="flex gap-2">
+    <div class="border-single border-t-none p-1">
+        <span>Single border with empty top border</span>
+    </div>
+    <div class="border-x-double border-y-thick p-1">
+        <span>Lateral double borders and top and bottom with a thick one. Corners are not drawn.</span>
+    </div>
+    <div class="border-b-single p-1">
+        <span>Just single bottom border. No corner is drawn.</span>
+    </div>
+    <div class="border-t-rounded border-r-rounded border-b-thick border-l-double p-1">
+        <span>Border top and right rounded, border bottom thick and border left double. Only top right corner is drawn.</span>
     </div>
 </div>
 ```
