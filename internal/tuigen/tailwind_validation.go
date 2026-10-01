@@ -171,6 +171,10 @@ func getAllKnownClassNames() []string {
 		"border-b-thick",
 		"border-l-none", "border-l-single", "border-l-double", "border-l-rounded",
 		"border-l-thick",
+		"border-x-none", "border-x-single", "border-x-double", "border-x-rounded",
+		"border-x-thick",
+		"border-y-none", "border-y-single", "border-y-double", "border-y-rounded",
+		"border-y-thick",
 		// Tailwind standard flex utilities
 		"grow", "grow-0", "shrink", "shrink-0",
 		"flex-1", "flex-auto", "flex-initial", "flex-none",
