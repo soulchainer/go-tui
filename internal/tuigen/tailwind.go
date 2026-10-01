@@ -137,7 +137,9 @@ func renderOp(op tailwind.Op) (code, needsImport string) {
 	case tailwind.TextAlign:
 		return plain("tui.WithTextAlign(tui." + [...]string{"TextAlignLeft", "TextAlignCenter", "TextAlignRight"}[op.Value] + ")")
 	case tailwind.Border:
-		return tui("tui.WithBorder(tui." + [...]string{"BorderSingle", "BorderRounded", "BorderDouble", "BorderThick"}[op.Style] + ")")
+		return tui("tui.WithBorder(tui." + [...]string{"BorderNone", "BorderSingle", "BorderDouble", "BorderRounded", "BorderThick"}[op.Style] + ")")
+	case tailwind.BorderSides:
+		return plain(fmt.Sprintf("tui.WithBorderTRBL(%d, %d, %d, %d)", op.Top, op.Right, op.Bottom, op.Left))
 	case tailwind.BorderColor:
 		return tui("tui.WithBorderStyle(tui.NewStyle().Foreground(" + colorExpr(op.Color) + "))")
 	case tailwind.Background:

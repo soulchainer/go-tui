@@ -105,14 +105,18 @@ type BorderStyle int
 
 // Border styles.
 const (
-	BorderSingle BorderStyle = iota
-	BorderRounded
+	BorderNone   BorderStyle = iota
+	BorderSingle
 	BorderDouble
+	BorderRounded
 	BorderThick
 )
 
 // Border sets the border style.
 type Border struct{ Style BorderStyle }
+
+// BorderSides sets per-side border style, accumulated from border-t-/border-r-/border-b-/border-l-/border-x-/border-y- classes.
+type BorderSides struct{ Top, Right, Bottom, Left BorderStyle }
 
 // BorderColor sets the border foreground color.
 type BorderColor struct{ Color Color }
@@ -279,6 +283,7 @@ func (AlignItems) op()          {}
 func (AlignSelf) op()           {}
 func (TextAlign) op()           {}
 func (Border) op()              {}
+func (BorderSides) op()         {}
 func (BorderColor) op()         {}
 func (Background) op()          {}
 func (ScrollbarColor) op()      {}

@@ -11,7 +11,7 @@ import (
 type Input struct {
 	// Configuration (set via options, immutable after construction)
 	width             int
-	border            BorderStyle
+	border            Borders
 	textStyle         Style
 	placeholder       string
 	placeholderStyle  Style
@@ -61,7 +61,7 @@ func NewInput(opts ...InputOption) *Input {
 	inp := &Input{
 		// Defaults
 		width:            20,
-		border:           BorderNone,
+		border:           BorderAll(BorderNone),
 		textStyle:        Style{},
 		placeholder:      "",
 		placeholderStyle: Style{}.Dim(),
@@ -83,7 +83,7 @@ func NewInput(opts ...InputOption) *Input {
 	// The viewport math reads these fields, so class-derived values must land
 	// here before the first render.
 	b, w := boxFromOptions(inp.elementOpts)
-	if b != BorderNone {
+	if !b.All(BorderNone) {
 		inp.border = b
 	}
 	if w > 0 {
@@ -185,7 +185,7 @@ func (inp *Input) visibleWidth() int {
 		return inp.layoutWidth
 	}
 	w := inp.width
-	if inp.border != BorderNone {
+	if !inp.border.All(BorderNone) {
 		return w - 2
 	}
 	return w
@@ -245,8 +245,8 @@ func (inp *Input) Render(app *App) *Element {
 	if inp.width > 0 {
 		opts = append(opts, WithWidth(inp.width))
 	}
-	if inp.border != BorderNone {
-		opts = append(opts, WithBorder(inp.border))
+	if !inp.border.All(BorderNone) {
+		opts = append(opts, WithBorderTRBL(inp.border.Top, inp.border.Right, inp.border.Bottom, inp.border.Left))
 	}
 	root := New(opts...)
 	root.Apply(inp.elementOpts...)
@@ -270,7 +270,7 @@ func (inp *Input) Render(app *App) *Element {
 	// Focus styling and the default height follow the final border, which
 	// element options (a class border) may have set.
 	totalHeight := 1
-	if root.Border() != BorderNone {
+	if !root.Border().All(BorderNone) {
 		totalHeight += 2
 		if inp.focused.Get() {
 			if inp.focusGradient != nil {

@@ -59,7 +59,7 @@ func (e *Element) applyClasses(classes string) {
 type classBase struct {
 	style                                     LayoutStyle
 	textAlign                                 TextAlign
-	border                                    BorderStyle
+	border                                    Borders
 	borderStyle                               Style
 	background                                *Style
 	scrollbarStyle, scrollbarThumbStyle       Style
@@ -88,9 +88,9 @@ func (e *Element) captureClassBase() *classBase {
 // can pick up class-derived values before rendering. Only a fixed width
 // reaches the component; percent, fraction, and auto widths size the root
 // element but leave the input viewport and textarea wrap width at their defaults.
-func boxFromOptions(opts []Option) (border BorderStyle, width int) {
+func boxFromOptions(opts []Option) (border Borders, width int) {
 	if len(opts) == 0 {
-		return BorderNone, 0
+		return BorderAll(BorderNone), 0
 	}
 	probe := New(opts...)
 	if w := probe.LayoutStyle().Width; w.Unit == layout.UnitFixed {
@@ -127,6 +127,8 @@ func classRestore(e *Element, b, a *classBase, op tailwind.Op) {
 	case tailwind.TextAlign:
 		restore(&e.textAlign, b.textAlign, a.textAlign)
 	case tailwind.Border:
+		restore(&e.border, b.border, a.border)
+	case tailwind.BorderSides:
 		restore(&e.border, b.border, a.border)
 	case tailwind.BorderColor:
 		restore(e.borderStyleSlot(), b.borderStyle, a.borderStyle)
@@ -251,7 +253,9 @@ func classOption(op tailwind.Op) Option {
 	case tailwind.TextAlign:
 		return WithTextAlign([...]TextAlign{TextAlignLeft, TextAlignCenter, TextAlignRight}[op.Value])
 	case tailwind.Border:
-		return WithBorder([...]BorderStyle{BorderSingle, BorderRounded, BorderDouble, BorderThick}[op.Style])
+		return WithBorder([...]BorderStyle{BorderNone, BorderSingle, BorderDouble, BorderRounded, BorderThick}[op.Style])
+	case tailwind.BorderSides:
+		return WithBorderTRBL(BorderStyle(op.Top), BorderStyle(op.Right), BorderStyle(op.Bottom), BorderStyle(op.Left))
 	case tailwind.BorderColor:
 		return WithBorderStyle(NewStyle().Foreground(classColor(op.Color)))
 	case tailwind.Background:

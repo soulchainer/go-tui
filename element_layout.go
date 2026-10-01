@@ -9,7 +9,7 @@ import "github.com/grindlemire/go-tui/internal/layout"
 func (e *Element) LayoutStyle() LayoutStyle {
 	style := e.style
 	// Add padding for border (HR uses border field for line style, not actual border)
-	if e.border != BorderNone && !e.hr {
+	if !e.border.All(BorderNone) && !e.hr {
 		// Border takes 1 character on each side
 		style.Padding.Top += 1
 		style.Padding.Right += 1
@@ -101,7 +101,7 @@ func (e *Element) IntrinsicSize() (width, height int) {
 		w, h := TableIntrinsicSize(e)
 		w += e.style.Padding.Horizontal()
 		h += e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			w += 2
 			h += 2
 		}
@@ -116,7 +116,7 @@ func (e *Element) IntrinsicSize() (width, height int) {
 		width = textWidth + e.style.Padding.Horizontal()
 		height = textHeight + e.style.Padding.Vertical()
 		// Add border if present (borders take 1 cell on each side)
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			width += 2
 			height += 2
 		}
@@ -135,7 +135,7 @@ func (e *Element) IntrinsicSize() (width, height int) {
 	if len(e.richText) > 0 {
 		width = richTextWidth(e.richText) + e.style.Padding.Horizontal()
 		height = 1 + e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			width += 2
 			height += 2
 		}
@@ -206,7 +206,7 @@ func (e *Element) IntrinsicSize() (width, height int) {
 	intrinsicH += e.style.Padding.Vertical()
 
 	// Add border if present
-	if e.border != BorderNone {
+	if !e.border.All(BorderNone) {
 		intrinsicW += 2
 		intrinsicH += 2
 	}
@@ -243,11 +243,11 @@ func (e *Element) HeightForWidth(width int) int {
 	// Components that wrap their own content measure it at the assigned width.
 	if e.measure != nil {
 		contentWidth := width - e.style.Padding.Horizontal()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			contentWidth -= 2
 		}
 		h := e.measure(max(contentWidth, 0)) + e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			h += 2
 		}
 		return h
@@ -257,12 +257,12 @@ func (e *Element) HeightForWidth(width int) int {
 	// those widths, rather than falling into the flex row branch below.
 	if e.tag == "table" {
 		contentWidth := width - e.style.Padding.Horizontal()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			contentWidth -= 2
 		}
 		h := layout.TableHeightForWidth(e, contentWidth)
 		h += e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			h += 2
 		}
 		return h
@@ -271,19 +271,19 @@ func (e *Element) HeightForWidth(width int) int {
 	// Text elements with wrapping
 	if e.text != "" && !e.noWrap {
 		contentWidth := width - e.style.Padding.Horizontal()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			contentWidth -= 2
 		}
 		if contentWidth <= 0 {
 			h := e.style.Padding.Vertical()
-			if e.border != BorderNone {
+			if !e.border.All(BorderNone) {
 				h += 2
 			}
 			return h
 		}
 		lines := wrapText(e.text, contentWidth)
 		h := len(lines) + e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			h += 2
 		}
 		return h
@@ -292,19 +292,19 @@ func (e *Element) HeightForWidth(width int) int {
 	// Rich text elements with wrapping.
 	if len(e.richText) > 0 && !e.noWrap {
 		contentWidth := width - e.style.Padding.Horizontal()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			contentWidth -= 2
 		}
 		if contentWidth <= 0 {
 			h := e.style.Padding.Vertical()
-			if e.border != BorderNone {
+			if !e.border.All(BorderNone) {
 				h += 2
 			}
 			return h
 		}
 		lines := wrapSpans(e.richText, contentWidth)
 		h := len(lines) + e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			h += 2
 		}
 		return h
@@ -316,7 +316,7 @@ func (e *Element) HeightForWidth(width int) int {
 	isColumn := e.style.Direction == Column || e.style.Display == DisplayBlock
 	if len(e.children) > 0 && isColumn {
 		contentWidth := width - e.style.Padding.Horizontal()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			contentWidth -= 2
 		}
 		totalH := 0
@@ -346,7 +346,7 @@ func (e *Element) HeightForWidth(width int) int {
 			visibleIdx++
 		}
 		totalH += e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			totalH += 2
 		}
 		return totalH
@@ -357,12 +357,12 @@ func (e *Element) HeightForWidth(width int) int {
 	// wrapped text heights match the final layout exactly.
 	if len(e.children) > 0 {
 		contentWidth := width - e.style.Padding.Horizontal()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			contentWidth -= 2
 		}
 		h := layout.RowContentHeight(e.LayoutChildren(), e.LayoutStyle(), contentWidth)
 		h += e.style.Padding.Vertical()
-		if e.border != BorderNone {
+		if !e.border.All(BorderNone) {
 			h += 2
 		}
 		return h
