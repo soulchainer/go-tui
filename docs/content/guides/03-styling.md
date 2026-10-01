@@ -183,13 +183,13 @@ All four border styles can also be set separately for each box side. Several cla
         <span>Single border with empty top border</span>
     </div>
     <div class="border-x-double border-y-thick p-1">
-        <span>Lateral double borders and top and bottom with a thick one. Corners are not drawn.</span>
+        <span>Lateral double borders and top and bottom with a thick one.</span>
     </div>
     <div class="border-b-single p-1">
-        <span>Just single bottom border. No corner is drawn.</span>
+        <span>Just single bottom border.</span>
     </div>
     <div class="border-t-rounded border-r-rounded border-b-thick border-l-double p-1">
-        <span>Border top and right rounded, border bottom thick and border left double. Only top right corner is drawn.</span>
+        <span>Border top and right rounded, border bottom thick and border left double.</span>
     </div>
 </div>
 ```
