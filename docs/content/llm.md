@@ -309,7 +309,7 @@ tui.WithPrintWidth(w int)  // Explicit width; default: auto-detect, fallback 80
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `borders` | expression | Border styles specified by side, in order (Top, Right, Bottom, Lef). Example: `{tui.BorderNone, tui.BorderThick, tui.BorderDouble, tui.BorderThick}` |
+| `borders` | expression | Border styles specified by side, in order (Top, Right, Bottom, Left). Example: `{tui.BorderNone, tui.BorderThick, tui.BorderDouble, tui.BorderThick}` |
 
 ### Modal
 
