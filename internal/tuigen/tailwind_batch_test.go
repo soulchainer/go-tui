@@ -32,7 +32,7 @@ func TestParseTailwindClasses_Multiple(t *testing.T) {
 			input: "flex-col border-rounded font-bold text-red",
 			wantOptions: []string{
 				"tui.WithDisplay(tui.DisplayFlex), tui.WithDirection(tui.Column)",
-				"tui.WithBorder(tui.BorderRounded)",
+				"tui.WithBorderTRBL(3, 3, 3, 3)",
 			},
 			wantTextMethods: []string{"Bold()", "Foreground(tui.Red)"},
 			wantImports:     []string{"tui"},
@@ -241,5 +241,92 @@ func TestParseTailwindClasses_PaddingAndMarginCombined(t *testing.T) {
 		if result.Options[i] != opt {
 			t.Errorf("Options[%d] = %q, want %q", i, result.Options[i], opt)
 		}
+	}
+}
+
+func TestParseTailwindClasses_BorderAccumulation(t *testing.T) {
+	type tc struct {
+		input       string
+		wantOptions []string
+	}
+
+	tests := map[string]tc{
+		"no border (substractive)": {
+			input:       "border border-none",
+			wantOptions: []string{"tui.WithBorderTRBL(0, 0, 0, 0)"},
+		},
+		"no border (substractive, symmetrical classes)": {
+			input:       "border border-x-none border-y-none",
+			wantOptions: []string{"tui.WithBorderTRBL(0, 0, 0, 0)"},
+		},
+		"border in all sides (individual classes)": {
+			input:       "border-t-double border-r-thick border-b-rounded border-l-single",
+			wantOptions: []string{"tui.WithBorderTRBL(2, 4, 3, 1)"},
+		},
+		"border in all sides (symmetric classes)": {
+			input:       "border-x-double border-y-thick",
+			wantOptions: []string{"tui.WithBorderTRBL(4, 2, 4, 2)"},
+		},
+		"border in all sides (mixed classes)": {
+			input:       "border-b-thick border-x-double border-t-thick",
+			wantOptions: []string{"tui.WithBorderTRBL(4, 2, 4, 2)"},
+		},
+		"border in all sides but top (substractive)": {
+			input:       "border-single border-t-none",
+			wantOptions: []string{"tui.WithBorderTRBL(0, 1, 1, 1)"},
+		},
+		"border in all sides but top (additive)": {
+			input:       "border-r-single border-b-single border-l-single",
+			wantOptions: []string{"tui.WithBorderTRBL(0, 1, 1, 1)"},
+		},
+		"border in all sides but right (substractive)": {
+			input:       "border-x-double border-y-thick border-r-none",
+			wantOptions: []string{"tui.WithBorderTRBL(4, 0, 4, 2)"},
+		},
+		"border in all sides but right (additive)": {
+			input:       "border-y-rounded border-l-single",
+			wantOptions: []string{"tui.WithBorderTRBL(3, 0, 3, 1)"},
+		},
+		"border in all sides but bottom (substractive)": {
+			input:       "border-rounded border-b-none",
+			wantOptions: []string{"tui.WithBorderTRBL(3, 3, 0, 3)"},
+		},
+		"border in all sides but bottom (additive)": {
+			input:       "border-t-rounded border-x-rounded",
+			wantOptions: []string{"tui.WithBorderTRBL(3, 3, 0, 3)"},
+		},
+		"border in all sides but left (substractive)": {
+			input:       "border-x-rounded border-l-none border-t-rounded border-b-rounded",
+			wantOptions: []string{"tui.WithBorderTRBL(3, 3, 3, 0)"},
+		},
+		"border in all sides but left (additive)": {
+			input:       "border-y-thick border-r-double",
+			wantOptions: []string{"tui.WithBorderTRBL(4, 2, 4, 0)"},
+		},
+		"border in all sides but left and right (substractive, symmetric classes)": {
+			input:       "border-double border-x-none",
+			wantOptions: []string{"tui.WithBorderTRBL(2, 0, 2, 0)"},
+		},
+		"border in all sides but top and bottom (substractive, symmetric classes)": {
+			input:       "border-double border-y-none",
+			wantOptions: []string{"tui.WithBorderTRBL(0, 2, 0, 2)"},
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			result := ParseTailwindClasses(tt.input)
+
+			if len(result.Options) != len(tt.wantOptions) {
+				t.Errorf("Options count = %d, want %d. Got: %v", len(result.Options), len(tt.wantOptions), result.Options)
+				return
+			}
+
+			for i, opt := range tt.wantOptions {
+				if result.Options[i] != opt {
+					t.Errorf("Options[%d] = %q, want %q", i, result.Options[i], opt)
+				}
+			}
+		})
 	}
 }

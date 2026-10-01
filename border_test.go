@@ -4,8 +4,9 @@ import (
 	"testing"
 )
 
-func TestBorderStyle_Chars_Single(t *testing.T) {
-	chars := BorderSingle.Chars()
+func TestBorderStyles_Chars_Single(t *testing.T) {
+	b := BorderAll(BorderSingle)
+	chars := b.Chars()
 
 	expected := BorderChars{
 		TopLeft:     '┌',
@@ -19,12 +20,13 @@ func TestBorderStyle_Chars_Single(t *testing.T) {
 	}
 
 	if chars != expected {
-		t.Errorf("BorderSingle.Chars() = %+v, want %+v", chars, expected)
+		t.Errorf("BorderAll(BorderSingle).Chars() = %+v, want %+v", chars, expected)
 	}
 }
 
-func TestBorderStyle_Chars_Double(t *testing.T) {
-	chars := BorderDouble.Chars()
+func TestBorderStyles_Chars_Double(t *testing.T) {
+	b := BorderAll(BorderDouble)
+	chars := b.Chars()
 
 	expected := BorderChars{
 		TopLeft:     '╔',
@@ -38,12 +40,13 @@ func TestBorderStyle_Chars_Double(t *testing.T) {
 	}
 
 	if chars != expected {
-		t.Errorf("BorderDouble.Chars() = %+v, want %+v", chars, expected)
+		t.Errorf("BorderAll(BorderDouble).Chars() = %+v, want %+v", chars, expected)
 	}
 }
 
-func TestBorderStyle_Chars_Rounded(t *testing.T) {
-	chars := BorderRounded.Chars()
+func TestBorderStyles_Chars_Rounded(t *testing.T) {
+	b := BorderAll(BorderRounded)
+	chars := b.Chars()
 
 	expected := BorderChars{
 		TopLeft:     '╭',
@@ -57,12 +60,13 @@ func TestBorderStyle_Chars_Rounded(t *testing.T) {
 	}
 
 	if chars != expected {
-		t.Errorf("BorderRounded.Chars() = %+v, want %+v", chars, expected)
+		t.Errorf("BorderAll(BorderRounded).Chars() = %+v, want %+v", chars, expected)
 	}
 }
 
-func TestBorderStyle_Chars_Thick(t *testing.T) {
-	chars := BorderThick.Chars()
+func TestBorderStyles_Chars_Thick(t *testing.T) {
+	b := BorderAll(BorderThick)
+	chars := b.Chars()
 
 	expected := BorderChars{
 		TopLeft:     '┏',
@@ -76,12 +80,12 @@ func TestBorderStyle_Chars_Thick(t *testing.T) {
 	}
 
 	if chars != expected {
-		t.Errorf("BorderThick.Chars() = %+v, want %+v", chars, expected)
+		t.Errorf("BorderAll(BorderThick).Chars() = %+v, want %+v", chars, expected)
 	}
 }
 
-func TestBorderStyle_Chars_None(t *testing.T) {
-	chars := BorderNone.Chars()
+func TestBorderStyles_Chars_None(t *testing.T) {
+	chars := BorderAll(BorderNone).Chars()
 
 	// All characters should be spaces
 	expected := BorderChars{
@@ -96,7 +100,98 @@ func TestBorderStyle_Chars_None(t *testing.T) {
 	}
 
 	if chars != expected {
-		t.Errorf("BorderNone.Chars() = %+v, want %+v", chars, expected)
+		t.Errorf("BorderAll(BorderNone).Chars() = %+v, want %+v", chars, expected)
+	}
+}
+
+func TestBorderStyles_Chars_MixedStylesPerSide(t *testing.T) {
+	type tc struct {
+		borders Borders
+		styles	string
+		want		BorderChars
+	}
+
+	tests := map[string]tc{
+		"all visible styles": {
+			borders: BorderTRBL(BorderSingle, BorderDouble, BorderThick, BorderRounded),
+			styles : "BorderSingle, BorderDouble, BorderThick, BorderRounded",
+			want: BorderChars{
+				TopLeft:     '┌',
+				Top:         '─',
+				TopRight:    '┐',
+				Left:        '│',
+				Right:       '║',
+				BottomLeft:  '┗',
+				Bottom:      '━',
+				BottomRight: '┛',
+			},
+		},
+		"border top none": {
+			borders: BorderTRBL(BorderNone, BorderDouble, BorderRounded, BorderThick),
+			styles : "BorderNone, BorderDouble, BorderRounded, BorderThick",
+			want: BorderChars{
+				TopLeft:     ' ',
+				Top:         ' ',
+				TopRight:    ' ',
+				Left:        '┃',
+				Right:       '║',
+				BottomLeft:  '╰',
+				Bottom:      '─',
+				BottomRight: '╯',
+			},
+		},
+		"border right none": {
+			borders: BorderTRBL(BorderRounded, BorderNone, BorderDouble, BorderSingle),
+			styles : "BorderRounded, BorderNone, BorderDouble, BorderSingle",
+			want: BorderChars{
+				TopLeft:     '╭',
+				Top:         '─',
+				TopRight:    ' ',
+				Left:        '│',
+				Right:       ' ',
+				BottomLeft:  '╚',
+				Bottom:      '═',
+				BottomRight: ' ',
+			},
+		},
+		"border bottom none": {
+			borders: BorderTRBL(BorderThick, BorderSingle, BorderNone, BorderDouble),
+			styles : "BorderThick, BorderSingle, BorderNone, BorderDouble",
+			want: BorderChars{
+				TopLeft:     '┏',
+				Top:         '━',
+				TopRight:    '┓',
+				Left:        '║',
+				Right:       '│',
+				BottomLeft:  ' ',
+				Bottom:      ' ',
+				BottomRight: ' ',
+			},
+		},
+		"border left none": {
+			borders: BorderTRBL(BorderDouble, BorderThick, BorderSingle, BorderNone),
+			styles : "BorderDouble, BorderThick, BorderSingle, BorderNone",
+			want: BorderChars{
+				TopLeft:     ' ',
+				Top:         '═',
+				TopRight:    '╗',
+				Left:        ' ',
+				Right:       '┃',
+				BottomLeft:  ' ',
+				Bottom:      '─',
+				BottomRight: '┘',
+			},
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			chars := tt.borders.Chars()
+
+			if chars != tt.want {
+				t.Errorf("BorderTRBL(%q).Chars() = %+v, want %+v", tt.styles, chars, tt.want)
+			}
+		})
 	}
 }
 
@@ -104,7 +199,7 @@ func TestDrawBox_SingleBorder(t *testing.T) {
 	buf := NewBuffer(10, 5)
 	style := NewStyle()
 
-	DrawBox(buf, NewRect(1, 1, 5, 3), BorderSingle, style)
+	DrawBox(buf, NewRect(1, 1, 5, 3), BorderAll(BorderSingle), style)
 
 	// Check corners
 	if buf.Cell(1, 1).Rune != '┌' {
@@ -157,7 +252,7 @@ func TestDrawBox_MinimalSize(t *testing.T) {
 	style := NewStyle()
 
 	// Minimal 2x2 box
-	DrawBox(buf, NewRect(1, 1, 2, 2), BorderSingle, style)
+	DrawBox(buf, NewRect(1, 1, 2, 2), BorderAll(BorderSingle), style)
 
 	// Should draw just corners
 	if buf.Cell(1, 1).Rune != '┌' {
@@ -195,7 +290,7 @@ func TestDrawBox_TooSmall(t *testing.T) {
 			// Mark a cell to verify nothing was drawn
 			buf.SetRune(0, 0, 'X', style)
 
-			DrawBox(buf, NewRect(0, 0, tt.width, tt.height), BorderSingle, style)
+			DrawBox(buf, NewRect(0, 0, tt.width, tt.height), BorderAll(BorderSingle), style)
 
 			// The 'X' should still be there (nothing drawn)
 			if buf.Cell(0, 0).Rune != 'X' {
@@ -212,7 +307,7 @@ func TestDrawBox_BorderNone(t *testing.T) {
 	// Mark a cell to verify nothing was drawn
 	buf.SetRune(1, 1, 'X', style)
 
-	DrawBox(buf, NewRect(1, 1, 5, 3), BorderNone, style)
+	DrawBox(buf, NewRect(1, 1, 5, 3), BorderAll(BorderNone), style)
 
 	// The 'X' should still be there
 	if buf.Cell(1, 1).Rune != 'X' {
@@ -224,7 +319,7 @@ func TestDrawBox_WithStyle(t *testing.T) {
 	buf := NewBuffer(10, 5)
 	style := NewStyle().Foreground(Red).Bold()
 
-	DrawBox(buf, NewRect(1, 1, 5, 3), BorderSingle, style)
+	DrawBox(buf, NewRect(1, 1, 5, 3), BorderAll(BorderSingle), style)
 
 	// Check that corners have the style
 	cell := buf.Cell(1, 1)
@@ -243,7 +338,7 @@ func TestDrawBox_ClipsToBuffer(t *testing.T) {
 	// Draw a box that extends beyond buffer on the right and bottom
 	// Box from (5,5) with size 10x10 will clip to buffer bounds (10x10)
 	// So visible portion is from (5,5) to (9,9) = 5x5 visible
-	DrawBox(buf, NewRect(5, 5, 10, 10), BorderSingle, style)
+	DrawBox(buf, NewRect(5, 5, 10, 10), BorderAll(BorderSingle), style)
 
 	// Only the visible portion should be drawn
 	// Top-left corner of the box at (5,5)
@@ -269,7 +364,7 @@ func TestDrawBoxWithTitle_Centered(t *testing.T) {
 	buf := NewBuffer(20, 5)
 	style := NewStyle()
 
-	DrawBoxWithTitle(buf, NewRect(0, 0, 15, 3), BorderSingle, "Test", style)
+	DrawBoxWithTitle(buf, NewRect(0, 0, 15, 3), BorderAll(BorderSingle), "Test", style)
 
 	// Title "Test" should be centered in the top border
 	// Available width = 15 - 2 = 13
@@ -300,7 +395,7 @@ func TestDrawBoxWithTitle_LongTitle(t *testing.T) {
 	style := NewStyle()
 
 	// Title longer than available space
-	DrawBoxWithTitle(buf, NewRect(0, 0, 6, 3), BorderSingle, "VeryLongTitle", style)
+	DrawBoxWithTitle(buf, NewRect(0, 0, 6, 3), BorderAll(BorderSingle), "VeryLongTitle", style)
 
 	// Available width = 6 - 2 = 4
 	// Title should be truncated to fit
@@ -322,7 +417,7 @@ func TestDrawBoxWithTitle_EmptyTitle(t *testing.T) {
 	buf := NewBuffer(10, 5)
 	style := NewStyle()
 
-	DrawBoxWithTitle(buf, NewRect(0, 0, 6, 3), BorderSingle, "", style)
+	DrawBoxWithTitle(buf, NewRect(0, 0, 6, 3), BorderAll(BorderSingle), "", style)
 
 	// Should just draw a normal box
 	if buf.Cell(0, 0).Rune != '┌' {
@@ -342,7 +437,7 @@ func TestDrawBoxWithTitle_TooSmallForTitle(t *testing.T) {
 	style := NewStyle()
 
 	// Box too small to fit any title
-	DrawBoxWithTitle(buf, NewRect(0, 0, 2, 2), BorderSingle, "X", style)
+	DrawBoxWithTitle(buf, NewRect(0, 0, 2, 2), BorderAll(BorderSingle), "X", style)
 
 	// Should still draw the box
 	if buf.Cell(0, 0).Rune != '┌' {
@@ -358,7 +453,7 @@ func TestDrawBoxWithTitle_WideCharTitle(t *testing.T) {
 	style := NewStyle()
 
 	// Title with wide characters
-	DrawBoxWithTitle(buf, NewRect(0, 0, 10, 3), BorderSingle, "你好", style)
+	DrawBoxWithTitle(buf, NewRect(0, 0, 10, 3), BorderAll(BorderSingle), "你好", style)
 
 	// "你好" takes 4 columns
 	// Available width = 10 - 2 = 8
@@ -403,7 +498,7 @@ func TestDrawBoxWithTitle_Alignment(t *testing.T) {
 			buf := NewBuffer(20, 5)
 			rectWidth := 15
 			style := NewStyle()
-			DrawBoxWithTitle(buf, NewRect(0, 0, 15, 3), BorderSingle, "Test", style, tt.align...)
+			DrawBoxWithTitle(buf, NewRect(0, 0, 15, 3), BorderAll(BorderSingle), "Test", style, tt.align...)
 			if buf.Cell(0, 0).Rune != '┌' {
 				t.Errorf("TopLeft = %q, want '┌'", buf.Cell(0, 0).Rune)
 			}
@@ -477,7 +572,7 @@ func TestDrawBoxClipped(t *testing.T) {
 		wantSpace [][2]int
 	}
 
-	chars := BorderSingle.Chars()
+	chars := BorderAll(BorderSingle).Chars()
 
 	tests := map[string]tc{
 		"fully visible": {
@@ -549,7 +644,7 @@ func TestDrawBoxClipped(t *testing.T) {
 			buf := NewBuffer(15, 10)
 			style := NewStyle()
 
-			DrawBoxClipped(buf, tt.boxRect, BorderSingle, style, tt.clipRect)
+			DrawBoxClipped(buf, tt.boxRect, BorderAll(BorderSingle), style, tt.clipRect)
 
 			for pos, wantRune := range tt.wantDrawn {
 				got := buf.Cell(pos[0], pos[1]).Rune
@@ -575,10 +670,11 @@ func TestDrawBoxGradientClipped(t *testing.T) {
 
 	boxRect := NewRect(1, 0, 5, 4)
 	clipRect := NewRect(0, 1, 15, 9) // clip top row
+	b := BorderAll(BorderSingle)
 
-	DrawBoxGradientClipped(buf, boxRect, BorderSingle, g, style, clipRect)
+	DrawBoxGradientClipped(buf, boxRect, b, g, style, clipRect)
 
-	chars := BorderSingle.Chars()
+	chars := b.Chars()
 
 	// Top row (y=0) should be clipped
 	if buf.Cell(1, 0).Rune != ' ' {
@@ -613,7 +709,7 @@ func TestFillBox(t *testing.T) {
 	style := NewStyle().Foreground(Blue)
 
 	// Draw a box first
-	DrawBox(buf, NewRect(1, 1, 6, 4), BorderSingle, style)
+	DrawBox(buf, NewRect(1, 1, 6, 4), BorderAll(BorderSingle), style)
 
 	// Fill the interior
 	fillStyle := NewStyle().Background(Red)

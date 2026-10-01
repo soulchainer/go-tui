@@ -184,6 +184,178 @@ func TestParseTailwindClass_IndividualMargin(t *testing.T) {
 	}
 }
 
+func TestParseTailwindClass_IndividualBorders(t *testing.T) {
+	type tc struct {
+		input      string
+		wantOK     bool
+		wantOption string
+		wantImport string
+	}
+
+	tests := map[string]tc{
+		"border-t-single": {
+			input:      "border-t-single",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(1, 0, 0, 0)",
+			wantImport: "",
+		},
+		"border-r-single": {
+			input:      "border-r-single",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 1, 0, 0)",
+			wantImport: "",
+		},
+		"border-b-single": {
+			input:      "border-b-single",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 1, 0)",
+			wantImport: "",
+		},
+		"border-l-single": {
+			input:      "border-l-single",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 0, 1)",
+			wantImport: "",
+		},
+		"border-t-double": {
+			input:      "border-t-double",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(2, 0, 0, 0)",
+			wantImport: "",
+		},
+		"border-r-double": {
+			input:      "border-r-double",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 2, 0, 0)",
+			wantImport: "",
+		},
+		"border-b-double": {
+			input:      "border-b-double",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 2, 0)",
+			wantImport: "",
+		},
+		"border-l-double": {
+			input:      "border-l-double",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 0, 2)",
+			wantImport: "",
+		},
+		"border-t-rounded": {
+			input:      "border-t-rounded",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(3, 0, 0, 0)",
+			wantImport: "",
+		},
+		"border-r-rounded": {
+			input:      "border-r-rounded",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 3, 0, 0)",
+			wantImport: "",
+		},
+		"border-b-rounded": {
+			input:      "border-b-rounded",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 3, 0)",
+			wantImport: "",
+		},
+		"border-l-rounded": {
+			input:      "border-l-rounded",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 0, 3)",
+			wantImport: "",
+		},
+		"border-t-thick": {
+			input:      "border-t-thick",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(4, 0, 0, 0)",
+			wantImport: "",
+		},
+		"border-r-thick": {
+			input:      "border-r-thick",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 4, 0, 0)",
+			wantImport: "",
+		},
+		"border-b-thick": {
+			input:      "border-b-thick",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 4, 0)",
+			wantImport: "",
+		},
+		"border-l-thick": {
+			input:      "border-l-thick",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 0, 0, 4)",
+			wantImport: "",
+		},
+		"border-x-single": {
+			input:      "border-x-single",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 1, 0, 1)",
+			wantImport: "",
+		},
+		"border-y-single": {
+			input:      "border-y-single",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(1, 0, 1, 0)",
+			wantImport: "",
+		},
+		"border-x-double": {
+			input:      "border-x-double",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 2, 0, 2)",
+			wantImport: "",
+		},
+		"border-y-double": {
+			input:      "border-y-double",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(2, 0, 2, 0)",
+			wantImport: "",
+		},
+		"border-x-rounded": {
+			input:      "border-x-rounded",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 3, 0, 3)",
+			wantImport: "",
+		},
+		"border-y-rounded": {
+			input:      "border-y-rounded",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(3, 0, 3, 0)",
+			wantImport: "",
+		},
+		"border-x-thick": {
+			input:      "border-x-thick",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(0, 4, 0, 4)",
+			wantImport: "",
+		},
+		"border-y-thick": {
+			input:      "border-y-thick",
+			wantOK:     true,
+			wantOption: "tui.WithBorderTRBL(4, 0, 4, 0)",
+			wantImport: "",
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			mapping, ok := ParseTailwindClass(tt.input)
+			if ok != tt.wantOK {
+				t.Errorf("ParseTailwindClass(%q) ok = %v, want %v", tt.input, ok, tt.wantOK)
+				return
+			}
+			if mapping.Option != tt.wantOption {
+				t.Errorf("Option = %q, want %q", mapping.Option, tt.wantOption)
+			}
+			if mapping.NeedsImport != tt.wantImport {
+				t.Errorf("NeedsImport = %q, want %q", mapping.NeedsImport, tt.wantImport)
+			}
+		})
+	}
+}
+
 func TestParseTailwindClass_FlexUtilities(t *testing.T) {
 	type tc struct {
 		input      string
