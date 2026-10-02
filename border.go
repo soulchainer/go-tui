@@ -165,11 +165,6 @@ func BorderAll(border BorderStyle) Borders {
 	return Borders{Top: border, Right: border, Bottom: border, Left: border}
 }
 
-// BorderSymmetric creates Borders with vertical(top/bottom) and horizontal(left/right) border style values.
-func BorderSymmetric(v, h BorderStyle) Borders {
-	return Borders{Top: v, Right: h, Bottom: v, Left: h}
-}
-
 // BorderTRBL creates border styles following CSS order: Top, Right, Bottom, Left.
 func BorderTRBL(t, r, b, l BorderStyle) Borders {
 	return Borders{Top: t, Right: r, Bottom: b, Left: l}
