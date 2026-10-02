@@ -358,7 +358,7 @@ templ Card(title string, opts ...tui.Option) {
 }
 ```
 
-A caller then writes `@Card("Stats", tui.WithBorder(tui.BorderRounded))`, or for the dialog:
+A caller then writes `@Card("Stats", tui.WithBorder(tui.BorderDouble))`, or for the dialog:
 
 ```gsx
 @Dialog(s.confirm, "Delete?", []tui.ModalOption{tui.WithModalBackdrop("blank")}) {
