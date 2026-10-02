@@ -116,12 +116,12 @@ func TestInput_VisibleWidth(t *testing.T) {
 	}
 
 	tests := map[string]tc{
-		"no border uses full width":     {width: 20, border: BorderNone, want: 20},
-		"border reserves two columns":   {width: 20, border: BorderSingle, want: 18},
-		"rounded border also shrinks":   {width: 10, border: BorderRounded, want: 8},
-		"individual side borders shrinks too":   {width: 16, borders: &Borders{Top: BorderNone, Right: BorderNone, Bottom: BorderThick, Left: BorderNone}, want: 14},
-		"zero width without border":     {width: 0, border: BorderNone, want: 0},
-		"narrow border can go negative": {width: 1, border: BorderSingle, want: -1},
+		"no border uses full width":           {width: 20, border: BorderNone, want: 20},
+		"border reserves two columns":         {width: 20, border: BorderSingle, want: 18},
+		"rounded border also shrinks":         {width: 10, border: BorderRounded, want: 8},
+		"individual side borders shrinks too": {width: 16, borders: &Borders{Top: BorderNone, Right: BorderNone, Bottom: BorderThick, Left: BorderNone}, want: 14},
+		"zero width without border":           {width: 0, border: BorderNone, want: 0},
+		"narrow border can go negative":       {width: 1, border: BorderSingle, want: -1},
 	}
 
 	for name, tt := range tests {
@@ -784,9 +784,9 @@ func TestInput_Render_BorderStates(t *testing.T) {
 			wantWidth:  Fixed(20),
 		},
 		"individual borders for each side applied when set": {
-			opts:       []InputOption{WithInputBorderTRBL(BorderSingle, BorderDouble, BorderThick, BorderRounded)},
+			opts:        []InputOption{WithInputBorderTRBL(BorderSingle, BorderDouble, BorderThick, BorderRounded)},
 			wantBorders: &Borders{Top: BorderSingle, Right: BorderDouble, Bottom: BorderThick, Left: BorderRounded},
-			wantWidth:  Fixed(20),
+			wantWidth:   Fixed(20),
 		},
 		"focus color applied when focused": {
 			opts: []InputOption{

@@ -70,7 +70,7 @@ func TestParse(t *testing.T) {
 		"zero denominator ignored": {input: "w-1/0"},
 		"border styles merge per side and accumulate at end": {
 			input:   "border border-rounded border-double border-thick border-single",
-			wantOps: []Op{BorderSides{Top:1, Right:1, Bottom:1, Left:1}},
+			wantOps: []Op{BorderSides{Top: 1, Right: 1, Bottom: 1, Left: 1}},
 		},
 		"border sides accumulate at end": {
 			input:   "border-t-thick gap-1 border-x-double border-b-single",
@@ -86,7 +86,7 @@ func TestParse(t *testing.T) {
 		},
 		"all-sides borders alone accumulate at end": {
 			input:   "border-thick gap-1 border-rounded",
-			wantOps: []Op{Gap{N: 1}, BorderSides{Top:3, Right:3, Bottom:3, Left:3}},
+			wantOps: []Op{Gap{N: 1}, BorderSides{Top: 3, Right: 3, Bottom: 3, Left: 3}},
 		},
 		"colors": {
 			input:   "border-red bg-bright-blue scrollbar-cyan scrollbar-thumb-white",

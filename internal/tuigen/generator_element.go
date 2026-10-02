@@ -378,7 +378,7 @@ var textareaAttributeToOption = map[string]string{
 	"width":            "tui.WithTextAreaWidth(%s)",
 	"maxHeight":        "tui.WithTextAreaMaxHeight(%s)",
 	"border":           "tui.WithTextAreaBorder(%s)",
-	"borders":					"tui.WithTextAreaBorderTRBL(%s)",
+	"borders":          "tui.WithTextAreaBorderTRBL(%s)",
 	"textStyle":        "tui.WithTextAreaTextStyle(%s)",
 	"value":            "tui.WithTextAreaValue(%s)",
 	"placeholder":      "tui.WithTextAreaPlaceholder(%s)",

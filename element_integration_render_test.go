@@ -109,7 +109,7 @@ func TestIntegration_Centering(t *testing.T) {
 func TestIntegration_RenderOutput(t *testing.T) {
 	type tc struct {
 		borderOpt Option
-		want  []string
+		want      []string
 	}
 
 	tests := map[string]tc{

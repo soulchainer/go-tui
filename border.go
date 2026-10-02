@@ -142,15 +142,15 @@ func (c *BorderChars) sideChars(side rune, style BorderStyle, styles *Borders) {
 // Chars returns the box-drawing characters for their border styles.
 func (b Borders) Chars() BorderChars {
 	c := &BorderChars{
-			TopLeft:     ' ',
-			Top:         ' ',
-			TopRight:    ' ',
-			Left:        ' ',
-			Right:       ' ',
-			BottomLeft:  ' ',
-			Bottom:      ' ',
-			BottomRight: ' ',
-		}
+		TopLeft:     ' ',
+		Top:         ' ',
+		TopRight:    ' ',
+		Left:        ' ',
+		Right:       ' ',
+		BottomLeft:  ' ',
+		Bottom:      ' ',
+		BottomRight: ' ',
+	}
 
 	c.sideChars('t', b.Top, &b)
 	c.sideChars('r', b.Right, &b)

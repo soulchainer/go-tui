@@ -67,8 +67,10 @@ func TestNew_WithOptions(t *testing.T) {
 			message: "WithBorder should set an uniform border style",
 		},
 		"WithBorderTRBL": {
-			opts:    []Option{WithBorderTRBL(BorderRounded, BorderSingle, BorderThick, BorderDouble)},
-			check:   func(e *Element) bool { return EqualBorders(e.border, Borders{Top: BorderRounded, Right: BorderSingle, Bottom: BorderThick, Left: BorderDouble}) },
+			opts: []Option{WithBorderTRBL(BorderRounded, BorderSingle, BorderThick, BorderDouble)},
+			check: func(e *Element) bool {
+				return EqualBorders(e.border, Borders{Top: BorderRounded, Right: BorderSingle, Bottom: BorderThick, Left: BorderDouble})
+			},
 			message: "WithBorderTRBL should set individual border styles for each side of the element",
 		},
 	}

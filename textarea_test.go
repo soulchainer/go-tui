@@ -90,10 +90,10 @@ func TestTextArea_WrapText_DisplayWidth(t *testing.T) {
 			want:   []string{"abcdefgh", "ijklmnop"},
 		},
 		"individual borders for each side reduces wrap width by two": {
-			width: 10,
+			width:   10,
 			borders: Borders{Top: BorderNone, Right: BorderThick, Bottom: BorderDouble, Left: BorderThick},
-			text:   "abcdefghijklmnop",
-			want:   []string{"abcdefgh", "ijklmnop"},
+			text:    "abcdefghijklmnop",
+			want:    []string{"abcdefgh", "ijklmnop"},
 		},
 		"embedded newlines preserved": {
 			width: 10,
@@ -216,11 +216,11 @@ func TestTextArea_Render_NoClippedContent(t *testing.T) {
 
 	borders := Borders{Top: BorderSingle, Right: BorderNone, Bottom: BorderThick, Left: BorderNone}
 	tests := map[string]tc{
-		"cjk without border": {width: 10, text: "一二三四五六七八九十"},
-		"cjk with uniform border":    {width: 10, border: BorderSingle, text: "一二三四五六七八"},
-		"ascii with uniform border":  {width: 10, border: BorderSingle, text: "abcdefghijklmnop"},
-		"cjk with individual borders for each side":    {width: 10, borders: borders, text: "一二三四五六七八"},
-		"ascii with individual borders for each side":  {width: 10, borders: borders, text: "abcdefghijklmnop"},
+		"cjk without border":                          {width: 10, text: "一二三四五六七八九十"},
+		"cjk with uniform border":                     {width: 10, border: BorderSingle, text: "一二三四五六七八"},
+		"ascii with uniform border":                   {width: 10, border: BorderSingle, text: "abcdefghijklmnop"},
+		"cjk with individual borders for each side":   {width: 10, borders: borders, text: "一二三四五六七八"},
+		"ascii with individual borders for each side": {width: 10, borders: borders, text: "abcdefghijklmnop"},
 	}
 
 	for name, tt := range tests {

@@ -119,6 +119,7 @@ var static = map[string]Class{
 	"wrap":              {Ops: []Op{Wrap{Enabled: true}}},
 	"scrollbar-hidden":  {Ops: []Op{ScrollbarHidden{}}},
 }
+
 // borderStyles maps border style keywords from classnames to their BorderStyle.
 var borderStyles = map[string]BorderStyle{
 	"none":    BorderNone,
@@ -196,10 +197,10 @@ var (
 	borderFullPattern = regexp.MustCompile(`^border(-(none|single|double|rounded|thick))?$`)
 	// Border side style: border + side (t r b l x y) + border style keyword.
 	borderSidePattern = regexp.MustCompile(`^border-([trblxy])?-(none|single|double|rounded|thick)$`)
-	fractionPattern = regexp.MustCompile(`^([wh])-(\d+)/(\d+)$`)
-	keywordPattern  = regexp.MustCompile(`^([wh])-(full|auto)$`)
-	hexPattern      = regexp.MustCompile(`^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\]$`)
-	gradientPattern = regexp.MustCompile(`^[\w-]+-[\w-]+$`)
+	fractionPattern   = regexp.MustCompile(`^([wh])-(\d+)/(\d+)$`)
+	keywordPattern    = regexp.MustCompile(`^([wh])-(full|auto)$`)
+	hexPattern        = regexp.MustCompile(`^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\]$`)
+	gradientPattern   = regexp.MustCompile(`^[\w-]+-[\w-]+$`)
 	// Per-side spacing: p/m + side (t r b l x y) + number.
 	sidePattern = regexp.MustCompile(`^([pm])([trblxy])-(\d+)$`)
 )

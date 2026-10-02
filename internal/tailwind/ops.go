@@ -105,7 +105,7 @@ type BorderStyle int
 
 // Border styles.
 const (
-	BorderNone   BorderStyle = iota
+	BorderNone BorderStyle = iota
 	BorderSingle
 	BorderDouble
 	BorderRounded
